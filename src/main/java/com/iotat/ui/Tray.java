@@ -7,6 +7,7 @@ import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,9 +17,13 @@ import javax.swing.JOptionPane;
 
 import com.iotat.utils.NetworkUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Tray {
 
-	private TrayIcon trayIcon;
+    private TrayIcon trayIcon;
+    private final Logger logger = LoggerFactory.getLogger(Tray.class);
 	
 	public Tray() {
 		postData();
@@ -36,8 +41,10 @@ public class Tray {
             {
                 public void mouseClicked(MouseEvent e)
                 {
-                    if (e.getClickCount() == 2)
+                    if (e.getClickCount() == 2){
                         JOptionPane.showMessageDialog(null, "Welcome to IOTA Timer!");
+                        logger.info("This SB user has double-click the tray.");
+                    }
                 }
             });
             
@@ -54,13 +61,15 @@ public class Tray {
             SystemTray systemTray = SystemTray.getSystemTray();
             try{
                 systemTray.add(trayIcon);
+                logger.debug("Program has run in taskbar.");
             }catch (Exception e){
+                logger.error("Error occurred. Add system tray icon failed.");
                 e.printStackTrace();
             }
         }
-        else
-        {
-            JOptionPane.showMessageDialog(null, "Your Computer don't support tray!");
+        else{
+            logger.error("Error occurred. Computer don't support tray.");
+            JOptionPane.showMessageDialog(null, "Your computer don't support tray!");
         }
     }
 	
@@ -72,20 +81,15 @@ public class Tray {
             public void run() {
                 // TODO Auto-generated method stub
                 while(true){
-                	try {
-						String localMacAddress = NetworkUtils.getMACAddress();
-                        String gatewayIP = NetworkUtils.getGatewayIP();
-                        String remoteMacAddress = NetworkUtils.getRouterMACAddress(gatewayIP);
-						String connectStatuString = "未连接";
+					String localMacAddress = NetworkUtils.getMACAddress();
+                    String gatewayIP = NetworkUtils.getGatewayIP();
+                    String remoteMacAddress = NetworkUtils.getRouterMACAddress(gatewayIP);
+					String connectStatuString = "未连接";
 						
-						//TODO: add post code
-						System.out.println(localMacAddress+"&"+remoteMacAddress);
-						
-						trayIcon.setToolTip("本机MAC：" + localMacAddress+"\r\n状态：" + connectStatuString);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					//TODO: add post code
+					System.out.println(localMacAddress+"&"+remoteMacAddress);
+					
+					trayIcon.setToolTip("本机MAC：" + localMacAddress+"\r\n状态：" + connectStatuString);
                 }
             }
             
