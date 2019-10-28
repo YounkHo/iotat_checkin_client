@@ -37,7 +37,6 @@ public class NetworkUtils {
             br.close();
             isr.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             logger.error("Error occur! An IOException has occured.", e);
         }
         logger.error("Cannot get your Router mac and return default [{}]", "00-00-00-00-00-00");
@@ -53,6 +52,7 @@ public class NetworkUtils {
         try{
             InetAddress ia1 = InetAddress.getLocalHost();//获取本地IP对象
             String ip = ia1.getHostAddress().toString(); //获取本机IP
+            logger.debug("Your local ip is [{}]", ip);
             //获得网络接口对象（即网卡），并得到mac地址，mac地址存在于一个byte数组中。  
             byte[] mac = NetworkInterface.getByInetAddress(ia1).getHardwareAddress();  
         

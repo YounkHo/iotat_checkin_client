@@ -9,7 +9,12 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class HttpRequest {
+
+    private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
 /**
  * 向指定URL发送GET方法的请求
  * 
@@ -23,7 +28,9 @@ public static String sendGet(String url, String param) {
     String result = "";
     BufferedReader in = null;
     try {
+        logger.debug("send get request to server.");
         String urlNameString = url + "?" + param;
+
         URL realUrl = new URL(urlNameString);
         // 打开和URL之间的连接
         URLConnection connection = realUrl.openConnection();
@@ -45,9 +52,8 @@ public static String sendGet(String url, String param) {
         while ((line = in.readLine()) != null) {
             result += line;
         }
-    } catch (Exception e) {
-        System.out.println("发送GET请求出现异常！" + e);
-        e.printStackTrace();
+    } catch (IOException e) {
+        logger.error("Error occurs when send get request." , e);
     }
     // 使用finally块来关闭输入流
     finally {
@@ -56,7 +62,7 @@ public static String sendGet(String url, String param) {
                 in.close();
             }
         } catch (Exception e2) {
-            e2.printStackTrace();
+            logger.error("Error occur when close stream. ", e2);
         }
     }
     return result;
@@ -72,6 +78,7 @@ public static String sendGet(String url, String param) {
  * @return 所代表远程资源的响应结果
  */
 public static String sendPost(String url, String param) {
+    logger.debug("send post request to server.");
     PrintWriter out = null;
     BufferedReader in = null;
     String result = "";
@@ -102,8 +109,7 @@ public static String sendPost(String url, String param) {
             result += line;
         }
     } catch (Exception e) {
-        System.out.println("发送 POST 请求出现异常！" + e);
-        e.printStackTrace();
+        logger.error("Error occurs when send post request." , e);
     }
     // 使用finally块来关闭输出流、输入流
     finally {
@@ -115,7 +121,7 @@ public static String sendPost(String url, String param) {
                 in.close();
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+            logger.error("Error occur when close stream. ", ex);
         }
     }
     return result;
