@@ -53,7 +53,7 @@ public class SystemUtils {
 					try {
 						Runtime.getRuntime().exec("attrib -H \"" + path + "\"");
 					} catch (IOException e) {
-						e.printStackTrace();
+						logger.error("IOException occured when cancel file hidden.", e);
 					}
 				}
 				if (!file.exists()) {
@@ -69,7 +69,7 @@ public class SystemUtils {
 						try {
 							Runtime.getRuntime().exec("attrib -H \"" + file.getAbsolutePath() + "\"");
 						} catch (IOException e) {
-							e.printStackTrace();
+							logger.error("IOException occured when cancel file hidden.", e);
 						}
 						Thread.sleep(500);
 					}
@@ -78,7 +78,7 @@ public class SystemUtils {
 			}
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("IOException occured when create lnk file.", e);
 			return false;
 		}
 	}

@@ -71,6 +71,7 @@ public class Tray {
             MenuItem about = new MenuItem("About");
             about.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
+                    JOptionPane.showMessageDialog(null, "开发组：\n\r谭本超: 1149284750@qq.com\n\r缪玲: 2236103111@qq.com\n\r樊国一: 2398409722@qq.com");
                     logger.debug("User has view the developer.");
                 }
             });
