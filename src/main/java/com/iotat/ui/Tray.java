@@ -13,7 +13,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.CheckboxMenuItem;
 
 import com.iotat.utils.NetworkUtils;
 import com.iotat.utils.SystemUtils;
@@ -71,7 +70,7 @@ public class Tray {
             MenuItem about = new MenuItem("About");
             about.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
-                    JOptionPane.showMessageDialog(null, "开发组：\n\r谭本超: 1149284750@qq.com\n\r缪玲: 2236103111@qq.com\n\r樊国一: 2398409722@qq.com");
+                    JOptionPane.showMessageDialog(null, "开发组：\n\r谭本超: 1149284750@qq.com\n\r缪   玲: 2236103111@qq.com\n\r樊国一: 2398409722@qq.com");
                     logger.debug("User has view the developer.");
                 }
             });
@@ -130,12 +129,12 @@ public class Tray {
                     try {
                         Thread.sleep(5 * 1000);
                     } catch (InterruptedException e) {
-                        logger.error("InterruptedException occurred.", e);
+                        logger.error("Interrupted Exception occurred.", e);
                     }
                 }
             }
             
-        }).start();;// This sets program send router mac to server every 3 minutes
+        }).start();// This sets program send router mac to server every 3 minutes
         
     }
 }
