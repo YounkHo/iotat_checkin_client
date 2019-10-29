@@ -14,6 +14,8 @@ import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import com.alibaba.fastjson.JSONObject;
+import com.iotat.utils.HttpRequest;
 import com.iotat.utils.NetworkUtils;
 import com.iotat.utils.SystemUtils;
 
@@ -120,12 +122,13 @@ public class Tray {
                     // TODO: add post code
                     System.out.println(localMacAddress + "&" + remoteMacAddress);
 
-                    // String response = HttpRequest.sendGet("http://192.168.1.195",
-                    // "localMacAddress&remoteMacAddress");
-
-                    // logger.debug("Server reponse [{}]", response);
-
+                    String response = HttpRequest.sendGet("http://192.168.1.195:18887/online",
+                    "selfMac="+localMacAddress + "&commonMac=" + remoteMacAddress);
+                    JSONObject responseJson = JSONObject.parseObject(response);
+                    logger.debug("Server reponse [{}]", response);
+                    connectStatuString = responseJson.getString("message");
                     trayIcon.setToolTip("本机MAC：" + localMacAddress + "\r\n状态：" + connectStatuString);
+                    
                     try {
                         Thread.sleep(5 * 1000);
                     } catch (InterruptedException e) {

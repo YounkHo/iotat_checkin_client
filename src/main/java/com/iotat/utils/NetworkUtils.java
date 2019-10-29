@@ -40,6 +40,7 @@ public class NetworkUtils {
             logger.error("Error occur! An IOException has occured.", e);
         }
         logger.error("Cannot get your Router mac and return default [{}]", "00-00-00-00-00-00");
+        //return "58-69-6c-5f-b2-32";
         return "00-00-00-00-00-00";
     }
 
