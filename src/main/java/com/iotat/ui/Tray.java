@@ -1,5 +1,20 @@
 package com.iotat.ui;
 
+import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URL;
+
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+import com.alibaba.fastjson.JSONObject;
 import com.iotat.utils.HttpRequest;
 import com.iotat.utils.NetworkUtils;
 import com.iotat.utils.SystemUtils;
@@ -99,30 +114,34 @@ public class Tray {
      * get to Server every interval
      */
     public void postData() {
-        new Thread(() -> {
-            while (true) {
-                String localMacAddress = NetworkUtils.getMACAddress();
-                String gatewayIP = NetworkUtils.getGatewayIP();
-                String remoteMacAddress = NetworkUtils.getRouterMACAddress(gatewayIP);
-                String connectStatuString = "未连接";
-                logger.debug("Successfully get your local mac:[{}] and remote Router mac [{}]", localMacAddress,
-                    remoteMacAddress);
+        new Thread(new Runnable() {
 
-                // TODO: add post code
-                logger.debug(localMacAddress + "&" + remoteMacAddress);
+            @Override
+            public void run() {
+                while (true) {
 
-                String response = HttpRequest.sendGet("http://10.10.5.130:18887/online",
-                    "selfMac=" + localMacAddress + "&commonMac=" + remoteMacAddress);
+                    String localMacAddress = NetworkUtils.getMACAddress();
+                    String gatewayIP = NetworkUtils.getGatewayIP();
+                    String remoteMacAddress = NetworkUtils.getRouterMACAddress(gatewayIP);
+                    String connectStatuString = "未连接";
+                    logger.debug("Successfully get your local mac:[{}] and remote Router mac [{}]", localMacAddress,
+                            remoteMacAddress);
 
-                logger.debug(response);
+                    // TODO: add post code
+                    System.out.println(localMacAddress + "&" + remoteMacAddress);
 
-                logger.debug("Server response [{}]", response);
-
-                trayIcon.setToolTip("本机MAC：" + localMacAddress + "\r\n状态：" + connectStatuString);
-                try {
-                    Thread.sleep(5 * 1000);
-                } catch (InterruptedException e) {
-                    logger.error("Interrupted Exception occurred.", e);
+                    String response = HttpRequest.sendGet("http://192.168.1.195:18887/online",
+                    "selfMac="+localMacAddress + "&commonMac=" + remoteMacAddress);
+                    JSONObject responseJson = JSONObject.parseObject(response);
+                    logger.debug("Server reponse [{}]", response);
+                    connectStatuString = responseJson.getString("message");
+                    trayIcon.setToolTip("本机MAC：" + localMacAddress + "\r\n状态：" + connectStatuString);
+                    
+                    try {
+                        Thread.sleep(5 * 1000);
+                    } catch (InterruptedException e) {
+                        logger.error("Interrupted Exception occurred.", e);
+                    }
                 }
             }
         }).start();// This sets program send router mac to server every 3 minutes
