@@ -128,7 +128,7 @@ public class Tray {
                             remoteMacAddress);
 
                     // TODO: add post code
-                    System.out.println(localMacAddress + "&" + remoteMacAddress);
+                    logger.debug(localMacAddress + "&" + remoteMacAddress);
 
                     String response = HttpRequest.sendGet("http://192.168.1.195:18887/online",
                     "selfMac="+localMacAddress + "&commonMac=" + remoteMacAddress);
