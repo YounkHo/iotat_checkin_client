@@ -1,25 +1,20 @@
 package com.iotat.ui;
 
-import java.awt.Image;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
-import java.awt.SystemTray;
-import java.awt.TrayIcon;
+import com.iotat.utils.HttpRequest;
+import com.iotat.utils.NetworkUtils;
+import com.iotat.utils.SystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-import com.iotat.utils.NetworkUtils;
-import com.iotat.utils.SystemUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+@SuppressWarnings("AlibabaAvoidManuallyCreateThread")
 public class Tray {
 
     private TrayIcon trayIcon;
@@ -49,17 +44,17 @@ public class Tray {
 
             PopupMenu popupMenu = new PopupMenu();
             MenuItem autoStart = new MenuItem();
-            if(SystemUtils.isAutoRun())
+            if (SystemUtils.isAutoRun())
                 autoStart.setLabel("Cancel Autorun");
             else
                 autoStart.setLabel("Set Autorun");
-            autoStart.addActionListener(new ActionListener(){
+            autoStart.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    if(! SystemUtils.isAutoRun()){
-                        if (SystemUtils.setAutoStart(true)){
+                    if (!SystemUtils.isAutoRun()) {
+                        if (SystemUtils.setAutoStart(true)) {
                             autoStart.setLabel("Cancel Autorun");
                             logger.debug("SB User Successfully set the program auto start.");
-                        }else
+                        } else
                             logger.error("SB User FAILED set the program auto start.");
                     }
                 }
@@ -68,7 +63,7 @@ public class Tray {
             popupMenu.addSeparator();
 
             MenuItem about = new MenuItem("About");
-            about.addActionListener(new ActionListener(){
+            about.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     JOptionPane.showMessageDialog(null, "开发组：\n\r谭本超: 1149284750@qq.com\n\r缪   玲: 2236103111@qq.com\n\r樊国一: 2398409722@qq.com");
                     logger.debug("User has view the developer.");
@@ -104,37 +99,32 @@ public class Tray {
      * get to Server every interval
      */
     public void postData() {
-        new Thread(new Runnable() {
+        new Thread(() -> {
+            while (true) {
+                String localMacAddress = NetworkUtils.getMACAddress();
+                String gatewayIP = NetworkUtils.getGatewayIP();
+                String remoteMacAddress = NetworkUtils.getRouterMACAddress(gatewayIP);
+                String connectStatuString = "未连接";
+                logger.debug("Successfully get your local mac:[{}] and remote Router mac [{}]", localMacAddress,
+                    remoteMacAddress);
 
-            @Override
-            public void run() {
-                while (true) {
+                // TODO: add post code
+                System.out.println(localMacAddress + "&" + remoteMacAddress);
 
-                    String localMacAddress = NetworkUtils.getMACAddress();
-                    String gatewayIP = NetworkUtils.getGatewayIP();
-                    String remoteMacAddress = NetworkUtils.getRouterMACAddress(gatewayIP);
-                    String connectStatuString = "未连接";
-                    logger.debug("Successfully get your local mac:[{}] and remote Router mac [{}]", localMacAddress,
-                            remoteMacAddress);
+                String response = HttpRequest.sendGet("http://10.10.5.130:18887/online",
+                    "selfMac=" + localMacAddress + "&commonMac=" + remoteMacAddress);
 
-                    // TODO: add post code
-                    System.out.println(localMacAddress + "&" + remoteMacAddress);
+                System.out.println(response);
+                logger.debug("Server reponse [{}]", response);
 
-                    // String response = HttpRequest.sendGet("http://192.168.1.195",
-                    // "localMacAddress&remoteMacAddress");
-
-                    // logger.debug("Server reponse [{}]", response);
-
-                    trayIcon.setToolTip("本机MAC：" + localMacAddress + "\r\n状态：" + connectStatuString);
-                    try {
-                        Thread.sleep(5 * 1000);
-                    } catch (InterruptedException e) {
-                        logger.error("Interrupted Exception occurred.", e);
-                    }
+                trayIcon.setToolTip("本机MAC：" + localMacAddress + "\r\n状态：" + connectStatuString);
+                try {
+                    Thread.sleep(5 * 1000);
+                } catch (InterruptedException e) {
+                    logger.error("Interrupted Exception occurred.", e);
                 }
             }
-            
         }).start();// This sets program send router mac to server every 3 minutes
-        
+
     }
 }

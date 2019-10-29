@@ -30,7 +30,7 @@ public class NetworkUtils {
                 String[] ipAndMac = str.trim().split("\\s+");
                 if(ipAndMac.length >= 2 && ipAndMac[0].equals(gatewayIP)){
                     logger.debug("Successfully get your Router mac via arp.exe: [{}]", ipAndMac[1]);
-                    return ipAndMac[1];
+                    return ipAndMac[1].toUpperCase();
                 }
                 str = br.readLine();
             }
