@@ -130,7 +130,7 @@ public class Tray {
                     // TODO: add post code
                     logger.debug(localMacAddress + "&" + remoteMacAddress);
 
-                    String response = HttpRequest.sendGet("http://192.168.1.195:18887/online",
+                    String response = HttpRequest.sendGet("http://10.10.5.130:18887/online",
                     "selfMac="+localMacAddress + "&commonMac=" + remoteMacAddress);
                     JSONObject responseJson = JSONObject.parseObject(response);
                     logger.debug("Server reponse [{}]", response);
