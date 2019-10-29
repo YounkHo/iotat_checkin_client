@@ -18,10 +18,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.iotat.utils.HttpRequest;
 import com.iotat.utils.NetworkUtils;
 import com.iotat.utils.SystemUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URL;
+
+@SuppressWarnings("AlibabaAvoidManuallyCreateThread")
 public class Tray {
 
     private TrayIcon trayIcon;
@@ -51,17 +59,17 @@ public class Tray {
 
             PopupMenu popupMenu = new PopupMenu();
             MenuItem autoStart = new MenuItem();
-            if(SystemUtils.isAutoRun())
+            if (SystemUtils.isAutoRun())
                 autoStart.setLabel("Cancel Autorun");
             else
                 autoStart.setLabel("Set Autorun");
-            autoStart.addActionListener(new ActionListener(){
+            autoStart.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    if(! SystemUtils.isAutoRun()){
-                        if (SystemUtils.setAutoStart(true)){
+                    if (!SystemUtils.isAutoRun()) {
+                        if (SystemUtils.setAutoStart(true)) {
                             autoStart.setLabel("Cancel Autorun");
                             logger.debug("SB User Successfully set the program auto start.");
-                        }else
+                        } else
                             logger.error("SB User FAILED set the program auto start.");
                     }
                 }
@@ -70,7 +78,7 @@ public class Tray {
             popupMenu.addSeparator();
 
             MenuItem about = new MenuItem("About");
-            about.addActionListener(new ActionListener(){
+            about.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     JOptionPane.showMessageDialog(null, "开发组：\n\r谭本超: 1149284750@qq.com\n\r缪   玲: 2236103111@qq.com\n\r樊国一: 2398409722@qq.com");
                     logger.debug("User has view the developer.");
@@ -136,8 +144,7 @@ public class Tray {
                     }
                 }
             }
-            
         }).start();// This sets program send router mac to server every 3 minutes
-        
+
     }
 }
