@@ -109,13 +109,14 @@ public class Tray {
                     remoteMacAddress);
 
                 // TODO: add post code
-                System.out.println(localMacAddress + "&" + remoteMacAddress);
+                logger.debug(localMacAddress + "&" + remoteMacAddress);
 
                 String response = HttpRequest.sendGet("http://10.10.5.130:18887/online",
                     "selfMac=" + localMacAddress + "&commonMac=" + remoteMacAddress);
 
-                System.out.println(response);
-                logger.debug("Server reponse [{}]", response);
+                logger.debug(response);
+
+                logger.debug("Server response [{}]", response);
 
                 trayIcon.setToolTip("本机MAC：" + localMacAddress + "\r\n状态：" + connectStatuString);
                 try {
