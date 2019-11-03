@@ -90,8 +90,8 @@ public class Tray {
             MenuItem exit = new MenuItem("Exit");
             exit.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    System.exit(0);
                     logger.debug("SB User exit the program manually.");
+                    System.exit(0);
                 }
             });
             popupMenu.add(exit);
