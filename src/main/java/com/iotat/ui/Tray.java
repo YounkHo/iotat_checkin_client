@@ -21,14 +21,6 @@ import com.iotat.utils.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.net.URL;
-
 @SuppressWarnings("AlibabaAvoidManuallyCreateThread")
 public class Tray {
 
@@ -127,7 +119,6 @@ public class Tray {
                     logger.debug("Successfully get your local mac:[{}] and remote Router mac [{}]", localMacAddress,
                             remoteMacAddress);
 
-                    // TODO: add post code
                     logger.debug(localMacAddress + "&" + remoteMacAddress);
 
                     String response = HttpRequest.sendGet("http://10.10.5.130:18887/online",
